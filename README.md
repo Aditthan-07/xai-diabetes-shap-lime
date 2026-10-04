@@ -2,10 +2,11 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![XAI](https://img.shields.io/badge/XAI-SHAP%20%7C%20LIME-orange.svg)](#)
+[![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-red.svg)](https://streamlit.io/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-Pipeline-green.svg)](https://scikit-learn.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A modular, production-ready Explainable AI (XAI) framework evaluating a **Random Forest Classifier** trained on the **Pima Indians Diabetes Dataset** using **SHAP** (SHapley Additive exPlanations) and **LIME** (Local Interpretable Model-agnostic Explanations).
+A modular, production-ready Explainable AI (XAI) framework evaluating a **Random Forest Classifier** trained on the **Pima Indians Diabetes Dataset** using **SHAP** (SHapley Additive exPlanations) and **LIME** (Local Interpretable Model-agnostic Explanations), featuring an interactive **Streamlit Clinical Decision Support Dashboard**.
 
 ---
 
@@ -13,13 +14,14 @@ A modular, production-ready Explainable AI (XAI) framework evaluating a **Random
 * **Zero Data Leakage:** Missing values (physiologically implausible zeros in Glucose, Blood Pressure, Skin Thickness, Insulin, and BMI) are imputed strictly within a `scikit-learn` `Pipeline(SimpleImputer(strategy='median'), RandomForestClassifier(...))` trained solely on `X_train`.
 * **Decoupled Architecture:** Core logic is modularized across `src.data`, `src.model`, and `src.explainers` to support reusable Python scripting, batch diagnostics, and interactive notebooks.
 * **Unified Diagnostic Engine (`PatientExplainer`):** Exposes a standardized single-patient explanation interface returning structured JSON/dictionary reports of prediction probabilities, SHAP Shapley values, LIME surrogate conditions, and attribution concordance metrics.
-* **Borderline Uncertainty Diagnosis:** Algorithmic detection of high-uncertainty patients near the decision boundary ($|P(y=1) - 0.5|$) with side-by-side comparative visualizations.
+* **Interactive Streamlit Web Dashboard (`app.py`):** Real-time clinical sliders, probability meter, live side-by-side SHAP vs. LIME attributions, and a 1-click **Borderline Patient Explorer** highlighting uncertain decision boundary cases ($|P(y=1) - 0.5|$).
 
 ---
 
 ## 📁 Repository Structure
 ```text
 xai-diabetes-shap-lime/
+├── app.py                                # Interactive Streamlit clinical XAI dashboard
 ├── data/
 │   └── pima-indians-diabetes.data.csv    # Local fallback dataset (768 patient records)
 ├── notebooks/
@@ -60,7 +62,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Interactive Notebooks
+### 2. Launch the Streamlit Clinical Dashboard
+Run the interactive dashboard locally:
+```bash
+streamlit run app.py
+```
+* **Interactive Sliders:** Adjust clinical metrics (Glucose, BMI, Age, Insulin, etc.) to evaluate patient risk in real time.
+* **🎯 Borderline Explorer:** Click the sidebar button to immediately inspect the most uncertain patient closest to the 50% probability threshold.
+* **XAI Concordance:** Compare whether SHAP and LIME agree on the primary biomarkers influencing the diagnosis.
+
+### 3. Interactive Notebooks
 Launch Jupyter to explore either the streamlined modular notebook or the classic guided lab:
 ```bash
 jupyter lab
@@ -89,19 +100,7 @@ metrics = evaluate_pipeline(trained_pipeline, X_test, y_test)
 print(f"Accuracy: {metrics['accuracy']:.4f} | ROC-AUC: {metrics['roc_auc']:.4f}")
 ```
 
-### 2. Global Explanations with `TreeSHAPEngine`
-```python
-from src.explainers import TreeSHAPEngine
-
-# Initialize SHAP engine from fitted pipeline
-shap_engine = TreeSHAPEngine(trained_pipeline, feature_names=FEATURE_NAMES)
-shap_values = shap_engine.compute_shap_values(X_test)
-
-# Generate summary plot
-shap_engine.plot_summary(shap_values, X_test, plot_type='dot')
-```
-
-### 3. Patient Diagnosis with Unified `PatientExplainer`
+### 2. Patient Diagnosis with Unified `PatientExplainer`
 ```python
 from src.explainers import PatientExplainer, find_most_uncertain_patient
 
