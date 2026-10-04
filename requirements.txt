@@ -1,0 +1,19 @@
+# Core Numerical & Data Processing
+numpy==1.26.4
+pandas==2.2.3
+scipy==1.13.1
+
+# Machine Learning
+scikit-learn==1.5.2
+
+# Explainable AI (XAI)
+shap==0.46.0
+lime==0.2.0.1
+
+# Visualization
+matplotlib==3.9.2
+seaborn==0.13.2
+
+# Interactive Environment
+ipython>=8.18.0
+jupyter>=1.0.0
