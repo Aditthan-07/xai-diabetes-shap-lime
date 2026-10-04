@@ -21,3 +21,6 @@ streamlit>=1.35.0
 # Interactive Environment
 ipython>=8.18.0
 jupyter>=1.0.0
+
+# Testing & Quality Assurance
+pytest>=8.0.0
