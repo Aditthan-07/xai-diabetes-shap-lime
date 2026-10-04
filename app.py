@@ -3,7 +3,7 @@ Streamlit Clinical Decision Support & Explainable AI (XAI) Dashboard.
 Real-time diabetes risk prediction with live SHAP and LIME explanations.
 """
 
-from typing import Dict, Tuple
+from typing import Any, Dict, Tuple
 import numpy as np
 import pandas as pd
 import streamlit as st
